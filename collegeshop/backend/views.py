@@ -1,0 +1,103 @@
+from rest_framework import viewsets, generics, permissions
+from django.contrib.auth.models import User
+from .models import Item, Message, Transaction, UserProfile
+from .serializers import (
+    ItemSerializer, MessageSerializer, TransactionSerializer,
+    RegisterSerializer, UserProfileSerializer
+)
+
+class ItemViewSet(viewsets.ModelViewSet):
+    queryset = Item.objects.all().order_by('-posted_at')
+    serializer_class = ItemSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all().order_by('-timestamp')
+    serializer_class = MessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class TransactionViewSet(viewsets.ModelViewSet):
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
+    permission_classes = [permissions.AllowAny]
+
+class UserProfileView(generics.RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return UserProfile.objects.get(user=self.request.user)
+
+from django.http import HttpResponse
+
+def api_home(request):
+    return HttpResponse("""
+        <html>
+            <head>
+                <title>Co API</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background: #f4f4f4;
+                        color: #333;
+                        padding: 40px;
+                        text-align: center;
+                    }
+                    h1 {
+                        color: #1c87c9;
+                        margin-bottom: 10px;
+                    }
+                    p {
+                        font-size: 18px;
+                        margin-bottom: 20px;
+                    }
+                    ul {
+                        list-style: none;
+                        padding: 0;
+                    }
+                    li {
+                        margin: 10px 0;
+                    }
+                    a {
+                        text-decoration: none;
+                        color: #0077cc;
+                        font-weight: bold;
+                    }
+                    a:hover {
+                        color: #005999;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>🎉 CampusCart API</h1>
+                <p>Welcome to the backend! Use the links below to access available API endpoints:</p>
+                <ul>
+                    <li><a href="/api/register/">Register</a></li>
+                    <li><a href="/api/token/">Login (JWT Token)</a></li>
+                    <li><a href="/api/token/refresh/">Refresh Token</a></li>
+                    <li><a href="/api/profile/">User Profile</a></li>
+                    <li><a href="/api/items/">Item Listings</a></li>
+                    <li><a href="/api/messages/">Messages</a></li>
+                    <li><a href="/api/transactions/">Transactions</a></li>
+                    <li><a href="/admin/">Admin Panel</a></li>
+                </ul>
+            </body>
+        </html>
+    """)
+from .models import UserProfile
+from .serializers import UserProfileSerializer
+
+class UserProfileView(generics.RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return UserProfile.objects.get(user=self.request.user)
