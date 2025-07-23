@@ -21,6 +21,15 @@
     <h2>Available Supplies</h2>
     <div class="items-grid" id="itemsGrid"></div>
   </main>
+  
+  <!-- Custom Context Menu -->
+  <div id="context-menu" class="hidden">
+      <ul>
+          <li id="select-item">Select</li>
+          <li id="delete-item">Delete</li>
+      </ul>
+  </div>
+
 <script>
   // Helper function to get query param
   function getCategoryFromUrl() {
@@ -29,12 +38,17 @@
     return params.get('category');
   }
 
+  // Save items and user info for global access
+  let itemsCache = [];
+  let usernameLoggedIn = localStorage.getItem("username");
+
   fetch("http://127.0.0.1:8000/api/items/")
     .then(res => {
       if (!res.ok) throw new Error('Failed to fetch items');
       return res.json();
     })
     .then(data => {
+      itemsCache = data; // cache for context actions
       const grid = document.getElementById("itemsGrid");
       const selectedCategory = getCategoryFromUrl();
       let filtered = data;
@@ -50,18 +64,78 @@
         grid.innerHTML = '<p>No items available for this category yet. <a href="post.html">Post the first one!</a></p>';
         return;
       }
-      filtered.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "item-card";
-        card.innerHTML = `
-          <h3>${item.title}</h3>
-          <p><strong>Category:</strong> ${item.category}</p>
-          <p>${item.description}</p>
-          ${item.image ? `<img src="http://127.0.0.1:8000${item.image}" width="100%" style="border-radius: 6px; margin: 10px 0;">` : ''}
-          <small>By ${item.owner.username}</small>
-        `;
-        grid.appendChild(card);
+     filtered.forEach(item => {
+  // Log the image path for debugging:
+  if (item.image) { 
+    console.log("Image path:", '/media/' + item.image.trim());
+  }
+
+  const card = document.createElement("div");
+  card.className = "item-card";
+  card.setAttribute("data-id", item.id);
+  card.setAttribute("data-owner", item.owner.username);
+  card.innerHTML = `
+    <h3>${item.title}</h3>
+    <p><strong>Category:</strong> ${item.category}</p>
+    <p>${item.description}</p>
+    ${item.image && item.image.trim() !== '' ? `<img class="item-image" src="/media/${item.image.trim()}" width="100%" style="border-radius: 6px; margin: 10px 0;">` : ''}
+    <small>By ${item.owner.username}</small>
+  `;
+  grid.appendChild(card);
+});
+
+      // -------------- CONTEXT MENU LOGIC BELOW -------------------
+      const contextMenu = document.getElementById('context-menu');
+      let currentItemId = null;
+      let showDelete = false;
+
+      // Remove old listeners if reloading items
+      document.querySelectorAll('.item-card').forEach(card => {
+        card.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          currentItemId = this.getAttribute('data-id');
+          // Only allow delete if user is the owner
+          showDelete = this.getAttribute('data-owner') === usernameLoggedIn;
+          document.getElementById('delete-item').style.display = showDelete ? 'block' : 'none';
+          // Position menu and show it
+          contextMenu.style.top = `${e.pageY}px`;
+          contextMenu.style.left = `${e.pageX}px`;
+          contextMenu.style.display = 'block'; // Remove 'hidden' here
+        });
       });
+
+      // Hide menu on click elsewhere
+      window.addEventListener('click', () => {
+        contextMenu.style.display = 'none';
+      });
+
+      // Handle delete from context menu
+      document.getElementById('delete-item').onclick = async function() {
+        if (showDelete && confirm('Are you sure you want to delete this item?')) {
+          const token = localStorage.getItem('access');
+          const response = await fetch(
+            `http://127.0.0.1:8000/api/items/${currentItemId}/`,
+            {
+              method: 'DELETE',
+              headers: { 'Authorization': `Bearer ${token}` }
+            }
+          );
+          if (response.ok) {
+            // Remove card from DOM
+            document.querySelector(`.item-card[data-id="${currentItemId}"]`).remove();
+          } else {
+            alert('Failed to delete item.');
+          }
+        }
+        contextMenu.style.display = 'none';
+      };
+
+      // Optionally, handle "Select" click (currently does nothing)
+      document.getElementById('select-item').onclick = function() {
+        // Add any "select" functionality here
+        contextMenu.style.display = 'none';
+      };
+      // ----------------------------------------------------------
     })
     .catch(error => {
       console.error('Error:', error);

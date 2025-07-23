@@ -5,11 +5,13 @@ from .serializers import (
     ItemSerializer, MessageSerializer, TransactionSerializer,
     RegisterSerializer, UserProfileSerializer
 )
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .permissions import IsOwnerOrReadOnly
 
 class ItemViewSet(viewsets.ModelViewSet):
-    queryset = Item.objects.all().order_by('-posted_at')
+    queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def get_queryset(self):
         queryset = Item.objects.all().order_by('-posted_at')
