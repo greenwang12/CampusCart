@@ -11,6 +11,13 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def get_queryset(self):
+        queryset = Item.objects.all().order_by('-posted_at')
+        category = self.request.query_params.get('category')
+        if category:
+            queryset = queryset.filter(category__iexact=category)
+        return queryset
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 

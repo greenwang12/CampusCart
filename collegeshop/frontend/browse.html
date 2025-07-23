@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Items</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">UniKart</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="browse.html" class="active">Browse</a>
+      <a href="post.html">Post</a>
+      <a href="auth.html">Login</a>
+    </nav>
+  </header>
+
+  <main class="items-section">
+    <h2>Available Supplies</h2>
+    <div class="items-grid" id="itemsGrid"></div>
+  </main>
+<script>
+  // Helper function to get query param
+  function getCategoryFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    // Category e.g. "books", "lab kits"
+    return params.get('category');
+  }
+
+  fetch("http://127.0.0.1:8000/api/items/")
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch items');
+      return res.json();
+    })
+    .then(data => {
+      const grid = document.getElementById("itemsGrid");
+      const selectedCategory = getCategoryFromUrl();
+      let filtered = data;
+      if (selectedCategory) {
+        // Do a case-insensitive match, normalize spaces (e.g., lab kits)
+        const cat = decodeURIComponent(selectedCategory).toLowerCase().replace(/\s+/g, '').trim();
+        filtered = data.filter(
+          item => item.category &&
+                  item.category.toLowerCase().replace(/\s+/g, '').trim() === cat
+        );
+      }
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p>No items available for this category yet. <a href="post.html">Post the first one!</a></p>';
+        return;
+      }
+      filtered.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "item-card";
+        card.innerHTML = `
+          <h3>${item.title}</h3>
+          <p><strong>Category:</strong> ${item.category}</p>
+          <p>${item.description}</p>
+          ${item.image ? `<img src="http://127.0.0.1:8000${item.image}" width="100%" style="border-radius: 6px; margin: 10px 0;">` : ''}
+          <small>By ${item.owner.username}</small>
+        `;
+        grid.appendChild(card);
+      });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById("itemsGrid").innerHTML = '<p>Error loading items. Please try again later.</p>';
+    });
+</script>
+</body>
+</html>

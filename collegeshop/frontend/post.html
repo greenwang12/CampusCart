@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Item</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">UniKart</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="browse.html">Browse</a>
+      <a href="post.html" class="active">Post</a>
+      <a href="auth.html">Login</a>
+    </nav>
+  </header>
+
+  <main class="auth-container">
+    <h2>Post a New Item</h2>
+    <form id="postForm">
+      <input type="text" id="title" placeholder="Title" required>
+      <textarea id="description" placeholder="Description" required></textarea>
+      <select id="category" required>
+        <option value="">Select Category</option>
+        <option value="books">Books</option>
+        <option value="electronics">Electronics</option>
+        <option value="stationery">Stationery</option>
+        <option value="sports">Sports</option>
+        <option value="others">Others</option>
+      </select>
+      <input type="file" id="image" accept="image/*">
+      <button type="submit">Submit</button>
+      <p id="post-message"></p>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById("postForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem("access");
+      if (!token) return alert("Login first.");
+
+      const formData = new FormData();
+      formData.append("title", document.getElementById("title").value);
+      formData.append("description", document.getElementById("description").value);
+      formData.append("category", document.getElementById("category").value);
+      const image = document.getElementById("image").files[0];
+      if (image) formData.append("image", image);
+
+      const res = await fetch("http://127.0.0.1:8000/api/items/", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+
+      document.getElementById("post-message").innerText = res.ok ? "Posted!" : "Failed.";
+    });
+  </script>
+</body>
+</html>

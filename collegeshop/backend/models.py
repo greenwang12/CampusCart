@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+# ───── Item Model ─────
+
 class Item(models.Model):
     CATEGORY_CHOICES = [
         ('books', 'Books'),
@@ -22,6 +24,8 @@ class Item(models.Model):
     def __str__(self):
         return self.title
 
+# ───── Message Model ─────
+
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
@@ -30,6 +34,8 @@ class Message(models.Model):
 
     def __str__(self):
         return f"{self.sender.username} → {self.receiver.username}"
+
+# ───── Transaction Model ─────
 
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -40,39 +46,7 @@ class Transaction(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.item.title}"
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    total_points = models.IntegerField(default=0)
-    badge_level = models.CharField(max_length=50, default='Newbie')
-
-    def update_badge(self):
-        if self.total_points >= 100:
-            self.badge_level = 'Champion'
-        elif self.total_points >= 50:
-            self.badge_level = 'Contributor'
-        elif self.total_points >= 10:
-            self.badge_level = 'Sharer'
-        else:
-            self.badge_level = 'Newbie'
-        self.save()
-
-    def __str__(self):
-        return f"{self.user.username} Profile"
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-
-@receiver(post_save, sender=Transaction)
-def update_user_rewards(sender, instance, **kwargs):
-    if instance.completed:
-        profile = UserProfile.objects.get(user=instance.user)
-        profile.total_points += instance.points_earned
-        profile.update_badge()
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+# ───── User Profile Model ─────
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
