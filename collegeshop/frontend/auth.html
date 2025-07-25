@@ -6,6 +6,9 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="unikart-header">
+  <span class="unikart-title">UniKart</span>
+</div>
 <div class="auth-container">
   <div id="login-view">
     <h2>Login</h2>
@@ -34,6 +37,34 @@
   </div>
   <div id="auth-message" style="margin-top:1em;"></div>
 </div>
+<style>
+.unikart-header {
+  background-color: #254734;
+  text-align: center;
+  padding: 17px 0;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  margin-bottom: 35px;
+}
+
+.unikart-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  font-family: 'Segoe UI', 'Verdana', sans-serif;
+  background: linear-gradient(92deg, #ffe342 0%, #86fcc5 60%, #9fe7fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  letter-spacing: 1.2px;
+  text-shadow: 0 4px 22px #19fa9b77, 0 2px 2px #17482d99;
+  animation: titleFade 1.0s ease-in 1;
+}
+
+@keyframes titleFade {
+  from { opacity: 0; transform: translateY(-32px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+</style>
 <script src="auth.js"></script>
 <script>
 document.getElementById('show-register').onclick = function(e) {

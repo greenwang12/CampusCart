@@ -3,24 +3,208 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Post Item</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Messages</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .logo {
+  color: #ffeb3b;
+  font-size: 2rem;
+  font-family: 'Poppins', 'Pacifico', cursive, sans-serif;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-right: 40px;
+  text-shadow: 0 2px 10px #194f4863;
+  background: linear-gradient(92deg, #ffe559 0%, #47e69b 60%, #36c7f4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  transition: font-size 0.18s;
+  user-select: none;
+}
+    /* Body and basic styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+    }
+
+    /* Navbar styling */
+    .navbar {
+      background-color: #004d40;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .nav-links a .nav-text {
+      display: none;  /* Hide text by default */
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+
+    .nav-links a i {
+      font-size: 1.5rem; /* Adjust icon size */
+    }
+
+    /* Show text when hovering over the link */
+    .nav-links a:hover .nav-text {
+      display: block;
+    }
+
+    .nav-links a:hover i {
+      color: #FFD700; /* Change icon color when hovered */
+    }
+
+    .nav-links a.active i {
+      color: #FFD700; /* Highlight icon when active */
+    }
+
+    .nav-links a.active .nav-text {
+      display: block;
+    }
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+    form {
+      background-color: #ffffff;  /* Keep the white background, but subtly adjust */
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);  /* Softer shadow */
+      width: 100%;
+      max-width: 450px;  /* A bit smaller */
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    form h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    form input,
+    form textarea,
+    form select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      background-color: #f9f9f9;
+      box-sizing: border-box;
+    }
+
+    form input:focus,
+    form textarea:focus,
+    form select:focus {
+      border-color: #0077cc;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 119, 204, 0.3);
+    }
+
+    button {
+      padding: 12px;
+      background-color: #0077cc;
+      color: white;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #005999;
+    }
+
+    #post-message {
+      font-size: 1rem;
+      margin-top: 15px;
+    }
+
+    #post-message.success {
+      color: green;
+      font-weight: bold;
+    }
+
+    #post-message.error {
+      color: red;
+      font-weight: bold;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        padding: 10px;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      form {
+        padding: 20px;
+        max-width: 90%;
+      }
+
+      form h2 {
+        font-size: 1.5rem;
+      }
+
+      button {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="navbar">
     <div class="logo">UniKart</div>
     <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="browse.html">Browse</a>
-      <a href="post.html" class="active">Post</a>
-      <a href="auth.html">Login</a>
+      <a href="index.html" class="home"><i class="fas fa-home"></i><span class="nav-text">Home</span></a>
+      <a href="browse.html" class="browse"><i class="fas fa-search"></i><span class="nav-text">Browse</span></a>
+      <a href="post.html" class="post active"><i class="fas fa-plus-circle"></i><span class="nav-text">Post</span></a>
+      <a href="message.html" class="message "><i class="fas fa-comments"></i><span class="nav-text">Messages</span></a>
     </nav>
   </header>
 
   <main class="auth-container">
-    <h2>Post a New Item</h2>
     <form id="postForm">
-      <input type="text" id="title" placeholder="Title" required>
+      <h2>Post a New Item</h2>
+      <input type="text" id="title" placeholder="Title" required />
       <textarea id="description" placeholder="Description" required></textarea>
       <select id="category" required>
         <option value="">Select Category</option>
@@ -30,7 +214,8 @@
         <option value="sports">Sports</option>
         <option value="others">Others</option>
       </select>
-      <input type="file" id="image" accept="image/*">
+      <input type="number" id="price" placeholder="Price (e.g. 150.00)" min="0" step="0.01" required />
+      <input type="file" id="image" accept="image/*" />
       <button type="submit">Submit</button>
       <p id="post-message"></p>
     </form>
@@ -47,16 +232,40 @@
       formData.append("title", document.getElementById("title").value);
       formData.append("description", document.getElementById("description").value);
       formData.append("category", document.getElementById("category").value);
+
+      let priceVal = document.getElementById("price").value;
+      if (!priceVal || isNaN(priceVal) || parseFloat(priceVal) < 0) {
+        formData.append("price", null);
+      } else {
+        formData.append("price", priceVal);
+      }
+
       const image = document.getElementById("image").files[0];
       if (image) formData.append("image", image);
 
-      const res = await fetch("http://127.0.0.1:8000/api/items/", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
+      try {
+        const res = await fetch("http://127.0.0.1:8000/api/items/", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
 
-      document.getElementById("post-message").innerText = res.ok ? "Posted!" : "Failed.";
+        if (res.ok) {
+          document.getElementById("post-message").innerText = "Posted!";
+          document.getElementById("post-message").className = "success";
+          form.reset();
+        } else {
+          const errData = await res.json();
+          document.getElementById("post-message").innerText =
+            "Failed: " + JSON.stringify(errData);
+          document.getElementById("post-message").className = "error";
+        }
+      } catch (error) {
+        document.getElementById("post-message").innerText =
+          "Network error, try again.";
+        document.getElementById("post-message").className = "error";
+        console.error(error);
+      }
     });
   </script>
 </body>

@@ -1,5 +1,16 @@
 const API = "http://127.0.0.1:8000/api/";
 
+function parseJwt(token) {
+ // Decode base64 payload (middle part of the token)
+ const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+ const jsonPayload = decodeURIComponent(atob(base64).split('').map(
+ function(c) {
+ return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+ }
+ ).join(''));
+ return JSON.parse(jsonPayload);
+}
+
 // LOGIN
 const loginForm = document.getElementById("login-form");
 if (loginForm) {
@@ -24,6 +35,10 @@ if (loginForm) {
         localStorage.setItem("access", data.access);
         localStorage.setItem("refresh", data.refresh);
         localStorage.setItem("username", username);
+        const payload = parseJwt(data.access);
+        if (payload.user_id) {
+        localStorage.setItem("user_id", payload.user_id);
+        }
         messageEl.style.color = "green";
         messageEl.innerText = "Login successful! Redirecting...";
         setTimeout(() => {

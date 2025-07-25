@@ -1,13 +1,15 @@
 from rest_framework import viewsets, generics, permissions
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from .models import Item, Message, Transaction, UserProfile
 from .serializers import (
     ItemSerializer, MessageSerializer, TransactionSerializer,
     RegisterSerializer, UserProfileSerializer
 )
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsOwnerOrReadOnly
 
+# Item ViewSet
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
@@ -23,21 +25,30 @@ class ItemViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+# Message ViewSet
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all().order_by('-timestamp')
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        # Filter messages by logged-in user
+        user = self.request.user
+        return Message.objects.filter(sender=user) | Message.objects.filter(receiver=user)
+
+# Transaction ViewSet
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+# User Registration View
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
 
+# User Profile View
 class UserProfileView(generics.RetrieveAPIView):
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -45,8 +56,7 @@ class UserProfileView(generics.RetrieveAPIView):
     def get_object(self):
         return UserProfile.objects.get(user=self.request.user)
 
-from django.http import HttpResponse
-
+# API Home Page
 def api_home(request):
     return HttpResponse("""
         <html>
@@ -101,12 +111,3 @@ def api_home(request):
             </body>
         </html>
     """)
-from .models import UserProfile
-from .serializers import UserProfileSerializer
-
-class UserProfileView(generics.RetrieveAPIView):
-    serializer_class = UserProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_object(self):
-        return UserProfile.objects.get(user=self.request.user)

@@ -143,7 +143,7 @@ SIMPLE_JWT = {
 }
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'collegeshop' / 'media'
 
 
 CORS_ALLOWED_ORIGINS = [

@@ -1,3 +1,4 @@
+# serializers.py
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Item, Message, Transaction, UserProfile
@@ -26,18 +27,38 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 # ─── Item Serializer ───
 class ItemSerializer(serializers.ModelSerializer):
-    owner = UserSerializer(read_only=True)  # show in response, not required in input
+    owner = UserSerializer(read_only=True)
+
+    price = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        required=False,
+        allow_null=True
+    )
 
     class Meta:
         model = Item
         fields = '__all__'
-        read_only_fields = ['owner', 'posted_at']  # prevents POST issues
+        read_only_fields = ['owner', 'posted_at']
+
+    def validate_price(self, value):
+        if value is not None and value < 0:
+            raise serializers.ValidationError("Price cannot be negative.")
+        return value
 
 # ─── Message Serializer ───
 class MessageSerializer(serializers.ModelSerializer):
+    receiver = serializers.SlugRelatedField(
+        slug_field='username',  # This ensures we're matching by the username
+        queryset=User.objects.all(),  # Queryset to look up the User model
+        required=True  # Optional: make sure the receiver is always provided
+    )
+    sender = serializers.ReadOnlyField(source='sender.username')  # We get the sender username automatically
+ 
     class Meta:
         model = Message
         fields = '__all__'
+
 
 # ─── Transaction Serializer ───
 class TransactionSerializer(serializers.ModelSerializer):
@@ -47,6 +68,9 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 # ─── User Profile Serializer ───
 class UserProfileSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='user.id', read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+
     class Meta:
         model = UserProfile
-        fields = ['total_points', 'badge_level']
+        fields = ['id', 'username', 'total_points', 'badge_level']
