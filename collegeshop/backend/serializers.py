@@ -1,7 +1,7 @@
 # serializers.py
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Item, Message, Transaction, UserProfile
+from .models import Item, Message, Transaction, UserProfile, Cart, CartItem, Wishlist, WishlistItem, GiftCard, GiftCardTransaction
 
 # ─── User Serializer ───
 class UserSerializer(serializers.ModelSerializer):
@@ -45,6 +45,39 @@ class ItemSerializer(serializers.ModelSerializer):
         if value is not None and value < 0:
             raise serializers.ValidationError("Price cannot be negative.")
         return value
+
+class CartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = '__all__'
+
+class CartSerializer(serializers.ModelSerializer):
+    items = CartItemSerializer(source='cartitem_set', many=True, read_only=True)
+    class Meta:
+        model = Cart
+        fields = ['id', 'user', 'items']
+
+class WishlistItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WishlistItem
+        fields = '__all__'
+
+class WishlistSerializer(serializers.ModelSerializer):
+    items = WishlistItemSerializer(source='wishlistitem_set', many=True, read_only=True)
+    class Meta:
+        model = Wishlist
+        fields = ['id', 'user', 'items']
+        # serializers.py
+
+class GiftCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GiftCard
+        fields = '__all__'
+
+class GiftCardTransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GiftCardTransaction
+        fields = '__all__'
 
 # ─── Message Serializer ───
 class MessageSerializer(serializers.ModelSerializer):

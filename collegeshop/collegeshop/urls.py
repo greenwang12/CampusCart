@@ -5,10 +5,11 @@ from django.conf.urls.static import static
 from backend.views import api_home
 
 urlpatterns = [
-    path('', api_home),
+    path('', api_home),                  
     path('admin/', admin.site.urls),
-    path('api/', include('backend.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('api/', include('backend.urls')),   # ✅ this adds "/api/" prefix to everything
+]
 
+# Only serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

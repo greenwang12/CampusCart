@@ -72,6 +72,34 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} ({self.total_points} pts, {self.badge_level})"
 
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+class Wishlist(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+class WishlistItem(models.Model):
+    wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+
+class GiftCard(models.Model):
+    code = models.CharField(max_length=32, unique=True)
+    balance = models.DecimalField(max_digits=10, decimal_places=2)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    expiry = models.DateField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+class GiftCardTransaction(models.Model):
+    gift_card = models.ForeignKey(GiftCard, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
 # ───── Signals ─────
 
 @receiver(post_save, sender=User)

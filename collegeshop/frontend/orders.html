@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Orders - UniKart</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: linear-gradient(120deg, #eafbf7 0%, #d0f0eb 58%, #ceeefa 100%);
+      color: #333;
+    }
+.navbar {
+      background: #204f43;
+      color: white;
+      padding: 0 4vw;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    /* Style for nav items */
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Icons Size */
+    .nav-links a i {
+      font-size: 1.5rem;
+    }
+
+    /* Hidden text by default */
+    .nav-links a .nav-text {
+      display: none;
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+
+    /* Show text when hovering over the link */
+    .nav-links a:hover .nav-text {
+      display: block;
+    }
+
+    /* Change icon color when hovered */
+    .nav-links a:hover i {
+      color: #FFD700;
+    }
+
+    .nav-links a.active i {
+      color: #FFD700; /* Highlight icon when active */
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-family: 'Poppins', cursive;
+      background: linear-gradient(92deg, #ffe559 0%, #47e69b 60%, #36c7f4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-right: 30px;
+    }
+    
+    .main-container {
+      padding: 60px 5vw;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #194f48;
+      font-family: 'Poppins', sans-serif;
+      margin-bottom: 28px;
+    }
+
+    .order-card {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: 0.2s ease;
+    }
+
+    .order-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #204f43;
+    }
+
+    .order-items {
+      margin-top: 14px;
+      font-size: 0.95rem;
+    }
+
+    .order-status {
+      margin-top: 10px;
+      font-weight: 500;
+      color: #2e7d32;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      font-size: 0.95rem;
+      color: #194f48;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-left">
+      <span class="logo">UniKart</span>
+      <nav class="nav-links">
+        <a href="index.html" class="active">
+          <i class="fas fa-home"></i>
+          <span class="nav-text">Home</span>
+        </a>
+        <a href="browse.html">
+          <i class="fas fa-search"></i>
+          <span class="nav-text">Browse</span>
+        </a>
+        <a href="post.html">
+          <i class="fas fa-plus-circle"></i>
+          <span class="nav-text">Post</span>
+        </a>
+        <a href="message.html">
+          <i class="fas fa-comments"></i>
+          <span class="nav-text">Messages</span>
+        </a>
+      </nav>
+    </div>
+</header>
+
+
+  <!-- Orders Section -->
+  <div class="main-container">
+    <h1>My Orders</h1>
+
+    <div class="order-card">
+      <div class="order-header">
+        <div>Order #123456</div>
+        <div>Placed on: July 22, 2025</div>
+      </div>
+      <div class="order-items">
+        <p>📚 Introduction to Algorithms - 1 item</p>
+      </div>
+      <div class="order-status">Status: Delivered</div>
+    </div>
+
+    <div class="order-card">
+      <div class="order-header">
+        <div>Order #123457</div>
+        <div>Placed on: July 20, 2025</div>
+      </div>
+      <div class="order-items">
+        <p>🎧 Noise-Cancelling Headphones - 1 item</p>
+      </div>
+      <div class="order-status" style="color: #f57c00;">Status: Pending Pickup</div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 UniKart. Built for students, by students.</p>
+  </footer>
+</body>
+</html>

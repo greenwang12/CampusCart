@@ -5,8 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>UniKart</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  
   <style>
+    /* --- Animated Splash Screen Styles --- */
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(120deg, #eafbf7 0%, #d0f0eb 50%, #ceeefa 100%);
+      z-index: 9999;
+      transition: opacity 0.6s ease;
+    }
+    .splash-logo {
+      font-size: 4rem;
+      display: flex;
+      gap: 8px;
+      letter-spacing: 3px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      text-shadow: 0 2px 18px #a2eab07d;
+      user-select: none;
+    }
+    .jump-letter {
+      opacity: 0;
+      transform: translateY(20px);
+      display: inline-block;
+      animation: splashJump 0.55s forwards;
+    }
+    @keyframes splashJump {
+      0%   { transform: translateY(20px); opacity: 0; }
+      50%  { transform: translateY(-12px); opacity: 1; }
+      85%  { transform: translateY(4px);  }
+      100% { transform: translateY(0px); opacity: 1; }
+    }
+    #splash-screen.hide {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.7s cubic-bezier(.78,.02,.32,1.03);
+    }
+    html.splash-active {
+      overflow: hidden;
+    }
+    /* --- Main Site Styles (as you provided) --- */
+    .splash-jump {
+      opacity: 0;
+      display: inline-block;
+      animation: jumpIn 0.57s ease forwards;
+    }
+    @keyframes jumpIn {
+      0% { transform: translateY(20px); opacity: 0; }
+      60% { transform: translateY(-10px); opacity: 1; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
@@ -14,33 +65,32 @@
       background: linear-gradient(120deg, #eafbf7 0%, #d0f0eb 58%, #ceeefa 100%);
       min-height: 100vh;
     }
-.logo {
-  color: #ffeb3b;
-  font-size: 2rem;
-  font-family: 'Poppins', 'Pacifico', cursive, sans-serif;
-  font-weight: 700;
-  letter-spacing: 2px;
-  margin-right: 40px;
-  text-shadow: 0 2px 10px #194f4863;
-  background: linear-gradient(92deg, #ffe559 0%, #47e69b 60%, #36c7f4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
-  transition: font-size 0.18s;
-  user-select: none;
-}
-
-footer {
-  text-align: center;
-  padding: 22px 0 10px 0;
-  background: none;
-  color: #194f48;
-  font-size: 1.07rem;
-  font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
-  letter-spacing: 0.5px;
-  font-weight: 500;
-}
+    .logo {
+      color: #ffeb3b;
+      font-size: 2rem;
+      font-family: 'Poppins', 'Pacifico', cursive, sans-serif;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-right: 40px;
+      text-shadow: 0 2px 10px #194f4863;
+      background: linear-gradient(92deg, #ffe559 0%, #47e69b 60%, #36c7f4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+      transition: font-size 0.18s;
+      user-select: none;
+    }
+    footer {
+      text-align: center;
+      padding: 22px 0 10px 0;
+      background: none;
+      color: #194f48;
+      font-size: 1.07rem;
+      font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
     /* Navbar Styling */
     .navbar {
       background: #204f43;
@@ -51,18 +101,15 @@ footer {
       align-items: center;
       justify-content: space-between;
     }
-
     .navbar-left {
       display: flex;
       align-items: center;
     }
-
     .nav-links {
       display: flex;
       align-items: center;
       gap: 22px;
     }
-
     /* Style for nav items */
     .nav-links a {
       color: white;
@@ -72,43 +119,36 @@ footer {
       align-items: center;
       position: relative;
     }
-
     /* Icons Size */
     .nav-links a i {
       font-size: 1.5rem;
     }
-
     /* Hidden text by default */
     .nav-links a .nav-text {
       display: none;
       font-size: 0.8rem;
       margin-top: 5px;
     }
-
     /* Show text when hovering over the link */
     .nav-links a:hover .nav-text {
       display: block;
     }
-
     /* Change icon color when hovered */
     .nav-links a:hover i {
       color: #FFD700;
     }
-
     .nav-links a.active i {
       color: #FFD700; /* Highlight icon when active */
     }
-
     /* Move the search bar to the right */
     .navbar-search {
       display: flex;
       align-items: center;
-      margin-left: auto; /* Push search to the right */
+      margin-left: auto;
       background: white;
       border-radius: 7px;
       padding: 2px 4px 2px 12px;
     }
-
     .navbar-search input[type="text"] {
       border: none;
       outline: none;
@@ -118,11 +158,9 @@ footer {
       width: 120px;
       transition: width 0.2s;
     }
-
     .navbar-search input[type="text"]:focus {
       width: 180px;
     }
-
     .navbar-search button {
       border: none;
       background: #26a69a;
@@ -134,17 +172,14 @@ footer {
       cursor: pointer;
       transition: background 0.15s;
     }
-
     .navbar-search button:hover {
       background: #169178;
     }
-
     /* Profile Menu */
     .profile-menu {
       position: relative;
       margin-left: 26px;
     }
-
     .profile-btn {
       display: flex;
       align-items: center;
@@ -158,26 +193,77 @@ footer {
       padding: 5px 11px;
       transition: background 0.15s;
     }
-
     .profile-btn:hover {
       background: transparent;
-      box-shadow: 0 2px 8px rgba(33, 80, 65, 0.09); /* Just a shadow */
+      box-shadow: 0 2px 8px rgba(33, 80, 65, 0.09);
     }
-
     .dropdown {
       position: absolute;
       top: 44px;
       right: 0;
       min-width: 240px;
-      border-radius: 18px;
-      background: linear-gradient(133deg, #6ee7b7 14%, #3b82f6 100%);
-      box-shadow: 0 6px 32px rgba(35,70,55,0.12);
-      padding: 23px 27px 16px 22px;
-      animation: fadeIn .18s;
+      border-radius: 16px;
+      background: linear-gradient(120deg, #eafbf7 0%, #d0f0eb 50%, #ceeefa 100%);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+      padding: 20px 24px 16px 20px;
+      animation: fadeIn 0.18s ease-out;
       z-index: 100;
       display: none;
     }
-
+    .dropdown-header {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #2b2b2b;
+    }
+    .dropdown-desc {
+      font-size: 0.9rem;
+      color: #5a5a5a;
+      margin-bottom: 18px;
+    }
+    .dropdown-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 12px 0;
+    }
+    .dropdown-list li {
+      padding: 10px 14px;
+      margin: 6px 0;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #333;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .dropdown-list li:hover {
+      background: #f0f0f0;
+      transform: translateX(4px);
+    }
+    .dropdown hr {
+      border: none;
+      height: 1px;
+      background: #dcdcdc;
+      margin: 16px 0;
+    }
+    .logout-btn,
+    .login-btn {
+      width: 100%;
+      padding: 10px 0;
+      font-weight: 600;
+      font-size: 0.95rem;
+      background: #204f43;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .logout-btn:hover,
+    .login-btn:hover {
+      background: #2e6c5f;
+      transform: scale(1.02);
+    }
     /* Hero Section */
     .hero {
       background: linear-gradient(90deg, #204f43 18%, #53a498 88%);
@@ -185,7 +271,6 @@ footer {
       padding: 72px 0 34px 0;
       text-align: center;
     }
-
     .hero-title {
       font-family: 'Poppins', sans-serif;
       font-weight: 700;
@@ -200,7 +285,6 @@ footer {
       letter-spacing: 2px;
       text-transform: uppercase;
     }
-
     @keyframes gradientMove {
       from {
         background-position: 0%;
@@ -209,7 +293,6 @@ footer {
         background-position: 100%;
       }
     }
-
     .hero-subtext {
       font-family: 'Dancing Script', cursive;
       font-size: 1.14rem;
@@ -219,96 +302,89 @@ footer {
       margin-top: -0.5rem;
       letter-spacing: 1.2px;
     }
-
-   /* Categories Section */
-.categories {
-  padding: 58px 0 42px 0;
-  text-align: center;
-  background: none;
-}
-
-.categories h2 {
-  font-size: 2.1rem;
-  margin: 0 0 32px 0;
-  letter-spacing: 1px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  color: #283e3c;
-}
-
-.category-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* This ensures proper wrapping of items */
-  gap: 25px;
-  padding: 0 2vw;
-  justify-items: center;
-}
-
-/* Adjust category cards */
-.category-card {
-  background: white;
-  padding: 32px 20px 26px 20px;
-  border-radius: 20px;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
-  text-align: center;
-  text-decoration: none;
-  color: #194f48;
-  font-weight: 500;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: transform 0.23s, box-shadow 0.23s, border-color 0.18s;
-  width: 80%;
-  max-width: 300px; /* Limit the width of the category card */
-  min-height: 175px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.category-card:hover {
-  transform: translateY(-5px) scale(1.025);
-  box-shadow: 0 12px 30px #74c7bacc;
-  border-color: #97e3d9;
-}
-
-.category-card span {
-  font-size: 2.3rem;
-  display: block;
-  margin-bottom: 14px;
-}
-
-.category-card h3 {
-  margin-bottom: 8px;
-  font-size: 1.17rem;
-  color: #194f48;
-  font-weight: 700;
-}
-
-.category-card p {
-  color: #375f50;
-  font-size: 1rem;
-  margin: 0;
-  font-weight: 400;
-}
-
-/* Mobile adjustments for categories */
-@media (max-width: 700px) {
-  .category-grid {
-    grid-template-columns: 1fr; /* Stack the items one by one */
-    gap: 22px;
-  }
-
-  .category-card {
-    max-width: 92vw; /* Allow cards to take more width on smaller screens */
-    margin: 0 auto; /* Center the cards */
-  }
-}
-
+    /* Categories Section */
+    .categories {
+      padding: 58px 0 42px 0;
+      text-align: center;
+      background: none;
+    }
+    .categories h2 {
+      font-size: 2.1rem;
+      margin: 0 0 32px 0;
+      letter-spacing: 1px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      color: #283e3c;
+    }
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 25px;
+      padding: 0 2vw;
+      justify-items: center;
+    }
+    /* Adjust category cards */
+    .category-card {
+      background: white;
+      padding: 32px 20px 26px 20px;
+      border-radius: 20px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      text-decoration: none;
+      color: #194f48;
+      font-weight: 500;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.23s, box-shadow 0.23s, border-color 0.18s;
+      width: 80%;
+      max-width: 300px;
+      min-height: 175px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .category-card:hover {
+      transform: translateY(-5px) scale(1.025);
+      box-shadow: 0 12px 30px #74c7bacc;
+      border-color: #97e3d9;
+    }
+    .category-card span {
+      font-size: 2.3rem;
+      display: block;
+      margin-bottom: 14px;
+    }
+    .category-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.17rem;
+      color: #194f48;
+      font-weight: 700;
+    }
+    .category-card p {
+      color: #375f50;
+      font-size: 1rem;
+      margin: 0;
+      font-weight: 400;
+    }
+    /* Mobile adjustments for categories */
+    @media (max-width: 700px) {
+      .category-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+      .category-card {
+        max-width: 92vw;
+        margin: 0 auto;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
+  <!-- === SPLASH SCREEN (Appears once per device on initial visit) === -->
+  <div id="splash-screen">
+    <div id="splash-logo" class="splash-logo"></div>
+  </div>
+  <!-- ==== NAVBAR ==== -->
   <header class="navbar">
     <div class="navbar-left">
       <span class="logo">UniKart</span>
@@ -331,7 +407,6 @@ footer {
         </a>
       </nav>
     </div>
-
     <!-- Search Bar -->
     <form class="navbar-search" role="search" aria-label="site search" onsubmit="event.preventDefault(); alert('Searching: ' + this.query.value)">
       <input type="text" name="query" placeholder="Search..." aria-label="Search" />
@@ -342,7 +417,6 @@ footer {
         </svg>
       </button>
     </form>
-
     <!-- Profile Dropdown Menu -->
     <div class="profile-menu" id="profile-menu">
       <button class="profile-btn" id="profile-btn" aria-label="Profile">
@@ -355,14 +429,12 @@ footer {
       <div class="dropdown" id="profile-dropdown"></div>
     </div>
   </header>
-
-  <!-- Main Content -->
+  <!-- ==== HERO ==== -->
   <main>
     <section class="hero">
       <h1 class="hero-title" id="hero-animate"></h1>
       <p class="hero-subtext">Your Unikart is there for all things pre-loved and ready!</p>
     </section>
-
     <section class="categories">
       <h2>Explore Categories</h2>
       <div class="category-grid">
@@ -394,115 +466,119 @@ footer {
       </div>
     </section>
   </main>
-
   <footer>
     <p>&copy; 2025 UniKart. Built for students, by students.</p>
   </footer>
-
+  <!-- === Splash, Dropdown, Hero Title Scripts === -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-  // --- Splash Fun Jumping UniKart ---
-  const intro = document.getElementById("intro-title");
-  const splash = document.getElementById("splash-screen");
-  const word = "UniKart";
-  const colors = [
-    "#20a574", "#40bfa1", "#31bcd7", "#a194fc", "#f977b9", "#f8e821", "#70c967"
-  ];
-  if (splash && intro) {
-    word.split('').forEach((c, i) => {
-      const span = document.createElement("span");
-      span.textContent = c;
-      span.className = "splash-jump";
-      span.style.color = colors[i % colors.length];
-      intro.appendChild(span);
-    });
-    const spans = intro.querySelectorAll(".splash-jump");
-    spans.forEach((span, i) => {
+ // --- SPLASH LOGIC (shows only once per session) ---
+  (function () {
+    const splash = document.getElementById("splash-screen");
+    const logo = document.getElementById("splash-logo");
+    const word = "UniKart";
+    const colors = [
+      "#20a574", "#40bfa1", "#31bcd7", "#a194fc", "#f977b9", "#f8e821", "#70c967"
+    ];
+
+    function alreadySeenSplash() {
+      return sessionStorage.getItem("unikartSplashSeen") === "yes";
+    }
+
+    if (splash && logo && !alreadySeenSplash()) {
+      document.documentElement.classList.add("splash-active");
+
+      [...word].forEach((char, i) => {
+        const span = document.createElement("span");
+        span.textContent = char;
+        span.className = "jump-letter";
+        span.style.color = colors[i % colors.length];
+        span.style.animationDelay = (i * 0.17) + "s";
+        logo.appendChild(span);
+      });
+
       setTimeout(() => {
-        span.style.opacity = "1";
-        span.style.animation = "jumpIn 0.57s cubic-bezier(.53,2.1,.4,1.1) both";
-      }, 150 * i);
-    });
-    setTimeout(() => {
-      splash.style.opacity = "0";
-      splash.style.pointerEvents = "none";
-      setTimeout(() => splash.remove(), 850);
-    }, 150 * word.length + 900);
-  }
+        splash.classList.add("hide");
+        document.documentElement.classList.remove("splash-active");
+        sessionStorage.setItem("unikartSplashSeen", "yes");
+        setTimeout(() => splash.remove(), 1000);
+      }, word.length * 170 + 1350);
+    } else {
+      if (splash) splash.remove();
+    }
+  })();
 
-  // ---- Profile Dropdown ----
-  const profileBtn = document.getElementById('profile-btn');
-  const dropdown = document.getElementById('profile-dropdown');
-  if (profileBtn && dropdown) {
-    profileBtn.addEventListener('click', function(e) {
-      dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
-      e.stopPropagation();
-    });
-    document.addEventListener('click', function(e) {
-      if (!dropdown.contains(e.target) && e.target !== profileBtn) {
-        dropdown.style.display = 'none';
-      }
-    });
-
-    function renderProfileMenu() {
-      const loggedIn = !!localStorage.getItem('access');
-      const username = localStorage.getItem('username') || 'User';
-      let html = '';
-      if (!loggedIn) {
-        html = `
-          <div class="dropdown-header">Hello</div>
-          <div class="dropdown-desc">Please log in to manage your account and orders</div>
-          <ul class="dropdown-list">
-            <li onclick="window.location='auth.html'">Login / Signup</li>
-          </ul>
-        `;
-      } else {
-        html = `
-          <div class="dropdown-header">
-            Hello, <span style="color:#51bfa2;font-weight:700;">${username}</span>
-          </div>
-          <div class="dropdown-desc">Manage your account and explore</div>
-          <ul class="dropdown-list">
-            <li onclick="window.location='orders.html'">Orders</li>
-            <li onclick="window.location='wishlist.html'">Wishlist</li>
-            <li onclick="window.location='cards.html'">Gift Cards</li>
-            <li onclick="window.location='contact.html'">Contact Us</li>
-          </ul>
-          <hr>
-          <button class="logout-btn" id="logoutBtn">LOGOUT</button>
-        `;
-      }
-      dropdown.innerHTML = html;
-      if (loggedIn) {
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-          logoutBtn.onclick = function() {
-            localStorage.removeItem('access');
-            localStorage.removeItem('refresh');
-            localStorage.removeItem('username');
-            window.location.reload();
+  // --- PROFILE DROPDOWN MENU LOGIC ---
+  document.addEventListener('DOMContentLoaded', function () {
+    // Profile dropdown
+    const profileBtn = document.getElementById('profile-btn');
+    const dropdown = document.getElementById('profile-dropdown');
+    if (profileBtn && dropdown) {
+      profileBtn.addEventListener('click', function (e) {
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        e.stopPropagation();
+      });
+      document.addEventListener('click', function (e) {
+        if (!dropdown.contains(e.target) && e.target !== profileBtn) {
+          dropdown.style.display = 'none';
+        }
+      });
+      function renderProfileMenu() {
+        const loggedIn = !!localStorage.getItem('access');
+        const username = localStorage.getItem('username') || 'User';
+        let html = '';
+        if (!loggedIn) {
+          html = `
+            <div class="dropdown-header">Hello</div>
+            <div class="dropdown-desc">Please log in to manage your account and orders</div>
+            <ul class="dropdown-list">
+              <li onclick="window.location='auth.html'">Login / Signup</li>
+            </ul>`;
+        } else {
+          html = `
+            <div class="dropdown-header">
+              Hello, <span style="color:#51bfa2;font-weight:700;">${username}</span>
+            </div>
+            <div class="dropdown-desc">Manage your account and explore</div>
+            <ul class="dropdown-list">
+              <li onclick="window.location='orders.html'">Orders</li>
+              <li onclick="window.location='wishlist.html'">Wishlist</li>
+              <li onclick="window.location='cards.html'">Gift Cards</li>
+              <li onclick="window.location='contact.html'">Contact Us</li>
+            </ul>
+            <hr>
+            <button class="logout-btn" id="logoutBtn">LOGOUT</button>`;
+        }
+        dropdown.innerHTML = html;
+        if (loggedIn) {
+          const logoutBtn = document.getElementById('logoutBtn');
+          if (logoutBtn) {
+            logoutBtn.onclick = () => {
+              localStorage.removeItem('access');
+              localStorage.removeItem('refresh');
+              localStorage.removeItem('username');
+              window.location.reload();
+            };
           }
         }
       }
+      renderProfileMenu();
     }
-    renderProfileMenu();
-  }
 
-  // ---- Hero Title Typewriter Effect ----
-  const text = "EXCHANGE. DONATE. SAVE.";
-  const target = document.getElementById("hero-animate");
-  if (target) {
-    let i = 0;
-    function typeWriter() {
-      if (i <= text.length) {
-        target.textContent = text.substring(0, i);
-        i++;
-        setTimeout(typeWriter, 70);
+    // --- HERO TITLE TYPEWRITER EFFECT ---
+    const text = "EXCHANGE. DONATE. SAVE.";
+    const target = document.getElementById("hero-animate");
+    if (target) {
+      let i = 0;
+      function typeWriter() {
+        if (i <= text.length) {
+          target.textContent = text.substring(0, i);
+          i++;
+          setTimeout(typeWriter, 70);
+        }
       }
+      typeWriter();
     }
-    typeWriter();
-  }
-});
+  });
   </script>
 </body>
 </html>
